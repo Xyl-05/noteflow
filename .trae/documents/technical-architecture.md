@@ -1,4 +1,3 @@
-
 ## 1. Architecture Design
 
 ```mermaid
@@ -27,41 +26,47 @@ flowchart TB
 
 ## 2. Technology Description
 
-- **Frontend**: React@18 + TypeScript + TailwindCSS@3 + Vite
-- **Routing**: React Router DOM
-- **State Management**: Zustand
-- **Icons**: Lucide React
-- **Backend**: Express.js + TypeScript
-- **Initialization Tool**: vite-init (react-express-ts template)
-- **Data Storage**: Local JSON file (for simplicity in demo)
+* **Frontend**: React\@18 + TypeScript + TailwindCSS\@3 + Vite
+
+* **Routing**: React Router DOM
+
+* **State Management**: Zustand
+
+* **Icons**: Lucide React
+
+* **Backend**: Express.js + TypeScript
+
+* **Initialization Tool**: vite-init (react-express-ts template)
+
+* **Data Storage**: Local JSON file (for simplicity in demo)
 
 ## 3. Route Definitions
 
-| Route | Purpose |
-|-------|---------|
-| / | Home page with hero and features |
-| /notes | Notes list page with search and filter |
-| /notes/new | Create new note page |
-| /notes/:id | Edit existing note page |
-| /contact | Contact form page |
+| Route      | Purpose                                |
+| ---------- | -------------------------------------- |
+| /          | Home page with hero and features       |
+| /notes     | Notes list page with search and filter |
+| /notes/new | Create new note page                   |
+| /notes/:id | Edit existing note page                |
+| /contact   | Contact form page                      |
 
 ## 4. API Definitions
 
 ### 4.1 Notes API
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | /api/notes | Get all notes | - | `{ notes: Note[] }` |
-| GET | /api/notes/:id | Get single note | - | `{ note: Note }` |
-| POST | /api/notes | Create new note | `{ title, content, tags }` | `{ note: Note }` |
-| PUT | /api/notes/:id | Update note | `{ title, content, tags }` | `{ note: Note }` |
-| DELETE | /api/notes/:id | Delete note | - | `{ success: boolean }` |
+| Method | Endpoint       | Description     | Request Body               | Response               |
+| ------ | -------------- | --------------- | -------------------------- | ---------------------- |
+| GET    | /api/notes     | Get all notes   | -                          | `{ notes: Note[] }`    |
+| GET    | /api/notes/:id | Get single note | -                          | `{ note: Note }`       |
+| POST   | /api/notes     | Create new note | `{ title, content, tags }` | `{ note: Note }`       |
+| PUT    | /api/notes/:id | Update note     | `{ title, content, tags }` | `{ note: Note }`       |
+| DELETE | /api/notes/:id | Delete note     | -                          | `{ success: boolean }` |
 
 ### 4.2 Contact API
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| POST | /api/contact | Submit feedback | `{ name, email, message }` | `{ success: boolean, message: string }` |
+| Method | Endpoint     | Description     | Request Body               | Response                                |
+| ------ | ------------ | --------------- | -------------------------- | --------------------------------------- |
+| POST   | /api/contact | Submit feedback | `{ name, email, message }` | `{ success: boolean, message: string }` |
 
 ### 4.3 Type Definitions
 
@@ -136,3 +141,4 @@ erDiagram
   "contacts": []
 }
 ```
+
