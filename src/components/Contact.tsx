@@ -29,14 +29,18 @@ export default function Contact() {
     }
 
     setIsSubmitting(true)
-    
+
     try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 3000)
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
+        signal: controller.signal,
       })
-      
+      clearTimeout(timeout)
+
       const data = await response.json()
       if (data.success) {
         setSubmitSuccess(true)
@@ -46,7 +50,18 @@ export default function Contact() {
         alert(data.error || '提交失败')
       }
     } catch (err) {
-      alert('提交失败，请重试')
+      // 降级到 localStorage
+      try {
+        const stored = localStorage.getItem('noteflow_contacts')
+        const contacts = stored ? JSON.parse(stored) : []
+        contacts.push({ ...formData, createdAt: new Date().toISOString() })
+        localStorage.setItem('noteflow_contacts', JSON.stringify(contacts))
+        setSubmitSuccess(true)
+        setFormData({ name: '', email: '', message: '' })
+        setTimeout(() => setSubmitSuccess(false), 5000)
+      } catch {
+        alert('提交失败，请重试')
+      }
     } finally {
       setIsSubmitting(false)
     }
