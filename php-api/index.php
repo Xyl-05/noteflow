@@ -140,7 +140,11 @@ if (preg_match('/^\/api\/notes(\/(\d+))?$/', $requestUri, $matches)) {
         }
         $stmt = $pdo->prepare('INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)');
         $stmt->execute([$data['name'], $data['email'], $data['message']]);
-        echo json_encode(['message' => 'Contact message received successfully']);
+        echo json_encode(['success' => true, 'message' => 'Contact message received successfully']);
+    } elseif ($requestMethod === 'GET') {
+        $stmt = $pdo->query('SELECT * FROM contacts ORDER BY created_at DESC');
+        $contacts = $stmt->fetchAll();
+        echo json_encode(['contacts' => $contacts]);
     } else {
         http_response_code(405);
         echo json_encode(['error' => 'Method not allowed']);
