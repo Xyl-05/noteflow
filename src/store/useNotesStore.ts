@@ -13,7 +13,70 @@ interface NotesState {
 }
 
 const API_URL = '/api/notes'
+const HEALTH_URL = '/api/health'
 const STORAGE_KEY = 'noteflow_notes'
+const REQUEST_TIMEOUT_MS = 5000
+
+interface ApiResponse<T> {
+  notes?: T[]
+  note?: T
+  error?: string
+}
+
+type ApiNote = Record<string, unknown>
+
+const normalizeNote = (value: ApiNote): Note => {
+  const now = new Date().toISOString()
+  const rawTags = value.tags
+  const tags = Array.isArray(rawTags)
+    ? rawTags.map(String)
+    : typeof rawTags === 'string'
+      ? (() => {
+          try {
+            const parsed: unknown = JSON.parse(rawTags)
+            return Array.isArray(parsed) ? parsed.map(String) : []
+          } catch {
+            return []
+          }
+        })()
+      : []
+
+  return {
+    id: String(value.id ?? ''),
+    title: String(value.title ?? ''),
+    content: String(value.content ?? ''),
+    tags,
+    createdAt: String(value.createdAt ?? value.created_at ?? now).replace(' ', 'T'),
+    updatedAt: String(value.updatedAt ?? value.updated_at ?? now).replace(' ', 'T'),
+  }
+}
+
+const requestJson = async <T,>(url: string, init: RequestInit = {}): Promise<T> => {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+
+  try {
+    const headers = new Headers(init.headers)
+    if (init.body && !headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json')
+    }
+    const response = await fetch(url, {
+      ...init,
+      headers,
+      signal: controller.signal,
+    })
+    const data = await response.json().catch(() => ({}))
+
+    if (!response.ok) {
+      const message = typeof data.error === 'string' ? data.error : `Request failed (${response.status})`
+      throw new Error(message)
+    }
+
+    return data as T
+  } finally {
+    clearTimeout(timeout)
+  }
+}
 
 // 默认笔记数据
 const defaultNotes: Note[] = [
@@ -55,7 +118,10 @@ const defaultNotes: Note[] = [
 const loadFromStorage = (): Note[] => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) return JSON.parse(stored)
+    if (stored) {
+      const parsed: unknown = JSON.parse(stored)
+      if (Array.isArray(parsed)) return parsed.map(normalizeNote)
+    }
     // 首次使用，初始化默认数据
     localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultNotes))
     return defaultNotes
@@ -79,14 +145,16 @@ const generateId = (): string => {
 
 // 检查是否有可用的后端 API
 const isApiAvailable = async (): Promise<boolean> => {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+
   try {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 2000)
-    const response = await fetch(API_URL, { signal: controller.signal })
-    clearTimeout(timeout)
+    const response = await fetch(HEALTH_URL, { signal: controller.signal })
     return response.ok
   } catch {
     return false
+  } finally {
+    clearTimeout(timeout)
   }
 }
 
@@ -99,32 +167,28 @@ export const useNotesStore = create<NotesState>((set, get) => ({
     set({ loading: true, error: null })
     try {
       if (await isApiAvailable()) {
-        // 使用后端 API
-        const response = await fetch(API_URL)
-        const data = await response.json()
-        set({ notes: data.notes, loading: false })
+        const data = await requestJson<ApiResponse<ApiNote>>(API_URL)
+        set({ notes: (data.notes ?? []).map(normalizeNote), loading: false })
       } else {
         // 使用 localStorage
         const notes = loadFromStorage()
         set({ notes, loading: false })
       }
     } catch (err) {
-      // 降级到 localStorage
-      const notes = loadFromStorage()
-      set({ notes, loading: false })
+      set({ error: err instanceof Error ? err.message : 'Failed to load notes', loading: false })
     }
   },
 
   createNote: async (note) => {
     try {
       if (await isApiAvailable()) {
-        const response = await fetch(API_URL, {
+        const data = await requestJson<ApiResponse<ApiNote>>(API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(note),
         })
-        const data = await response.json()
-        set((state) => ({ notes: [data.note, ...state.notes] }))
+        if (!data.note) throw new Error('The API did not return the created note')
+        const createdNote = normalizeNote(data.note)
+        set((state) => ({ notes: [createdNote, ...state.notes], error: null }))
       } else {
         // 使用 localStorage
         const newNote: Note = {
@@ -140,21 +204,23 @@ export const useNotesStore = create<NotesState>((set, get) => ({
         })
       }
     } catch (err) {
-      set({ error: 'Failed to create note' })
+      set({ error: err instanceof Error ? err.message : 'Failed to create note' })
+      throw err
     }
   },
 
   updateNote: async (id, note) => {
     try {
       if (await isApiAvailable()) {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const data = await requestJson<ApiResponse<ApiNote>>(`${API_URL}/${encodeURIComponent(id)}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(note),
         })
-        const data = await response.json()
+        if (!data.note) throw new Error('The API did not return the updated note')
+        const updatedNote = normalizeNote(data.note)
         set((state) => ({
-          notes: state.notes.map((n) => (n.id === id ? data.note : n)),
+          notes: state.notes.map((n) => (n.id === id ? updatedNote : n)),
+          error: null,
         }))
       } else {
         // 使用 localStorage
@@ -169,15 +235,16 @@ export const useNotesStore = create<NotesState>((set, get) => ({
         })
       }
     } catch (err) {
-      set({ error: 'Failed to update note' })
+      set({ error: err instanceof Error ? err.message : 'Failed to update note' })
+      throw err
     }
   },
 
   deleteNote: async (id) => {
     try {
       if (await isApiAvailable()) {
-        await fetch(`${API_URL}/${id}`, { method: 'DELETE' })
-        set((state) => ({ notes: state.notes.filter((n) => n.id !== id) }))
+        await requestJson<ApiResponse<never>>(`${API_URL}/${encodeURIComponent(id)}`, { method: 'DELETE' })
+        set((state) => ({ notes: state.notes.filter((n) => n.id !== id), error: null }))
       } else {
         // 使用 localStorage
         set((state) => {
@@ -187,7 +254,8 @@ export const useNotesStore = create<NotesState>((set, get) => ({
         })
       }
     } catch (err) {
-      set({ error: 'Failed to delete note' })
+      set({ error: err instanceof Error ? err.message : 'Failed to delete note' })
+      throw err
     }
   },
 

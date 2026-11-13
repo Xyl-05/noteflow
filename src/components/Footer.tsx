@@ -1,92 +1,36 @@
 import { Link } from 'react-router-dom'
-import { FileText, Github, Twitter } from 'lucide-react'
+import { ArrowUpRight, FileText } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8">
-          <div className="md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center">
-                <FileText className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold">NoteFlow</span>
-            </div>
-            <p className="text-gray-400 mb-4 max-w-md">
-              一款简洁优雅的个人笔记管理工具，帮助你高效记录、整理和管理日常笔记。
+    <footer className="border-t border-[#e3e7df] bg-gradient-to-b from-[#f5f6f0] to-[#eef1e9] text-[#34443a]">
+      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12">
+        <div className="flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-md">
+            <Link to="/" className="inline-flex items-center gap-3" aria-label="NoteFlow 首页">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#244334] text-white">
+                <FileText className="h-5 w-5" />
+              </span>
+              <span className="text-xl font-semibold tracking-tight">NoteFlow</span>
+            </Link>
+            <p className="mt-4 text-sm leading-7 text-[#718075]">
+              把想法轻轻放好。用标签整理笔记，再用搜索找回值得留下的内容。
             </p>
-            <div className="flex items-center space-x-4">
-              <a
-                href="#"
-                className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary-600 transition-colors"
-              >
-                <Github className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary-600 transition-colors"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-            </div>
           </div>
 
-          <div>
-            <h3 className="font-semibold mb-4">产品</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/" className="text-gray-400 hover:text-white transition-colors">
-                  功能介绍
-                </Link>
-              </li>
-              <li>
-                <Link to="/notes" className="text-gray-400 hover:text-white transition-colors">
-                  开始使用
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  更新日志
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-semibold mb-4">公司</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  关于我们
-                </a>
-              </li>
-              <li>
-                <Link to="/contact" className="text-gray-400 hover:text-white transition-colors">
-                  联系我们
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  加入我们
-                </a>
-              </li>
-            </ul>
-          </div>
+          <nav className="flex flex-wrap gap-x-7 gap-y-3 text-sm text-[#647168]" aria-label="页脚导航">
+            <Link to="/" className="transition-colors hover:text-[#244334]">产品介绍</Link>
+            <Link to="/notes" className="transition-colors hover:text-[#244334]">我的笔记</Link>
+            <Link to="/contact" className="transition-colors hover:text-[#244334]">联系</Link>
+            <a href="https://github.com/Xyl-05/noteflow" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 transition-colors hover:text-[#244334]">
+              GitHub <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          </nav>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between">
-          <p className="text-gray-400 text-sm">
-            © 2024 NoteFlow. All rights reserved.
-          </p>
-          <div className="flex items-center space-x-6 mt-4 sm:mt-0">
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-              隐私政策
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-              服务条款
-            </a>
-          </div>
+        <div className="mt-9 flex flex-col gap-2 border-t border-[#e0e5dc] pt-5 text-xs text-[#879187] sm:flex-row sm:items-center sm:justify-between">
+          <span>© {new Date().getFullYear()} NoteFlow</span>
+          <span>用心记录，慢慢整理。</span>
         </div>
       </div>
     </footer>

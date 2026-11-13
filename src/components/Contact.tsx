@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Send, Mail, Phone, MapPin, CheckCircle } from 'lucide-react'
+import { Send, MessageCircle, CheckCircle } from 'lucide-react'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -67,85 +67,60 @@ export default function Contact() {
     }
   }
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      title: '电子邮箱',
-      content: 'support@noteflow.com',
-    },
-    {
-      icon: Phone,
-      title: '联系电话',
-      content: '400-123-4567',
-    },
-    {
-      icon: MapPin,
-      title: '公司地址',
-      content: '北京市朝阳区科技园区',
-    },
-  ]
-
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+    <div className="page-surface min-h-screen pb-20 pt-28 sm:pt-32">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mb-12 text-center sm:mb-14">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#6e876f]">Say hello</p>
+          <h1 className="mb-4 text-3xl font-semibold tracking-tight text-[#26352c] sm:text-4xl">
             联系我们
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-base text-[#718075] sm:text-lg">
             有任何问题或建议？我们很乐意听取您的意见
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8">
           <div className="space-y-6">
-            {contactInfo.map((info, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-start gap-4"
-              >
-                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <info.icon className="w-6 h-6 text-primary-600" />
+              <div className="rounded-[1.75rem] border border-[#e3e7df] bg-white/90 p-7 shadow-[0_18px_50px_-38px_rgba(42,66,50,0.35)]">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e8efe7] text-[#557b61]">
+                  <MessageCircle className="h-6 w-6" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                    {info.title}
-                  </h3>
-                  <p className="text-gray-600">{info.content}</p>
-                </div>
+                <h3 className="mb-2 text-lg font-semibold text-[#2d3c32]">项目反馈</h3>
+                <p className="leading-7 text-[#718075]">
+                  这是一个个人练习项目。欢迎通过表单提交使用建议或发现的问题。
+                </p>
               </div>
-            ))}
-
-            <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl p-6 text-white">
-              <h3 className="text-xl font-semibold mb-2">欢迎反馈</h3>
-              <p className="text-primary-100 mb-4">
-                我们重视每一位用户的反馈，您的建议将帮助我们不断改进产品。
+            <div className="rounded-[1.75rem] bg-gradient-to-br from-[#244334] to-[#355a42] p-7 text-white shadow-[0_22px_55px_-35px_rgba(36,67,52,0.65)]">
+              <h3 className="mb-2 text-xl font-semibold">简单、清晰、好找</h3>
+              <p className="mb-4 leading-7 text-[#d5e0d5]">
+                NoteFlow 聚焦个人笔记的记录、标签整理与快速搜索。
               </p>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-accent-400" />
-                <span className="text-sm">24小时内回复</span>
+                <CheckCircle className="h-5 w-5 text-[#c3d6b8]" />
+                <span className="text-sm text-[#e5ede2]">持续打磨体验</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
+          <div className="rounded-[1.75rem] border border-[#e3e7df] bg-white/95 p-6 shadow-[0_20px_55px_-40px_rgba(42,66,50,0.4)] sm:p-8">
             {submitSuccess ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-500" />
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#e8efe7]">
+                  <CheckCircle className="h-8 w-8 text-[#557b61]" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="mb-2 text-xl font-semibold text-[#26352c]">
                   提交成功！
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-[#718075]">
                   感谢您的反馈，我们会尽快回复您。
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    您的姓名 <span className="text-red-500">*</span>
+                  <label htmlFor="name" className="mb-2 block text-sm font-medium text-[#435247]">
+                    您的姓名 <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -159,8 +134,8 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    电子邮箱 <span className="text-red-500">*</span>
+                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-[#435247]">
+                    电子邮箱 <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -174,8 +149,8 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    您的需求或建议 <span className="text-red-500">*</span>
+                  <label htmlFor="message" className="mb-2 block text-sm font-medium text-[#435247]">
+                    您的需求或建议 <span className="text-rose-500">*</span>
                   </label>
                   <textarea
                     id="message"

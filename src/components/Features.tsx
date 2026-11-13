@@ -1,74 +1,78 @@
-import { PenTool, Tags, Search, Clock, Cloud, Lock } from 'lucide-react'
+import { Clock3, Database, LayoutGrid, PenLine, Search, Tags } from 'lucide-react'
 
 const features = [
   {
-    icon: PenTool,
-    title: '富文本编辑',
-    description: '支持多种格式的文本编辑，让你的笔记更加丰富多样。',
-    color: 'bg-blue-500',
+    icon: PenLine,
+    number: '01',
+    title: '先写下来',
+    description: '用轻量编辑器记录标题、正文和标签，不需要复杂的设置就能开始。',
+    tone: 'bg-[#e7eee5] text-[#55745d]',
   },
   {
     icon: Tags,
-    title: '标签分类',
-    description: '智能标签系统，轻松组织和管理你的笔记内容。',
-    color: 'bg-green-500',
+    number: '02',
+    title: '用标签归档',
+    description: '给笔记添加自己的标签，在列表中快速筛选相关内容。',
+    tone: 'bg-[#f2e9dc] text-[#9a7043]',
   },
   {
     icon: Search,
-    title: '快速搜索',
-    description: '实时搜索过滤，秒速找到你需要的笔记。',
-    color: 'bg-purple-500',
+    number: '03',
+    title: '随时找回来',
+    description: '同时搜索标题和正文，快速定位已经记录的想法。',
+    tone: 'bg-[#e9e7f0] text-[#746b90]',
   },
   {
-    icon: Clock,
-    title: '时间管理',
-    description: '自动记录创建和更新时间，追踪笔记演变过程。',
-    color: 'bg-orange-500',
+    icon: Clock3,
+    number: '04',
+    title: '保留修改时间',
+    description: '记录笔记的创建与更新时间，回看内容变化更清楚。',
+    tone: 'bg-[#e4edf0] text-[#587b85]',
   },
   {
-    icon: Cloud,
-    title: '云端同步',
-    description: '数据安全存储，随时随地访问你的笔记。',
-    color: 'bg-cyan-500',
+    icon: Database,
+    number: '05',
+    title: '灵活保存',
+    description: '支持 PHP API 与 SQLite；API 不可用时可使用浏览器本地存储。',
+    tone: 'bg-[#e8eee7] text-[#59745d]',
   },
   {
-    icon: Lock,
-    title: '隐私保护',
-    description: '端到端加密，保护你的隐私数据安全。',
-    color: 'bg-pink-500',
+    icon: LayoutGrid,
+    number: '06',
+    title: '不同屏幕都好用',
+    description: '使用响应式布局，让桌面和手机上的记录体验都保持清晰。',
+    tone: 'bg-[#f0e8e8] text-[#936d70]',
   },
 ]
 
 export default function Features() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            核心功能
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            我们提供一系列强大的功能，帮助你更好地管理和组织笔记内容
+    <section className="relative overflow-hidden border-t border-white/70 bg-[#fbfaf7] py-20 sm:py-28">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mb-12 flex flex-col justify-between gap-5 sm:mb-16 sm:flex-row sm:items-end">
+          <div>
+            <p className="section-kicker">A CALMER WAY TO CAPTURE</p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.045em] text-[#1d2b25] sm:text-4xl">
+              简单记录，轻松整理。
+            </h2>
+          </div>
+          <p className="max-w-md text-base leading-7 text-[#748078]">
+            从一条笔记开始。清楚的结构和恰到好处的工具，让想法更容易留下来。
           </p>
         </div>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="card group"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className={`w-12 h-12 ${feature.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                <feature.icon className="w-6 h-6 text-white" />
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map(({ icon: Icon, number, title, description, tone }) => (
+            <article key={number} className="feature-card group">
+              <div className="mb-10 flex items-start justify-between">
+                <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${tone}`}>
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="font-serif text-sm italic text-[#a2aaa1]">{number}</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600">
-                {feature.description}
-              </p>
-            </div>
+              <h3 className="text-lg font-semibold text-[#2b3930]">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-[#77827a]">{description}</p>
+            </article>
           ))}
         </div>
       </div>
