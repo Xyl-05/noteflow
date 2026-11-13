@@ -38,9 +38,9 @@ export default function Hero() {
           </div>
 
           <div className="mt-11 flex flex-wrap gap-x-7 gap-y-3 border-t border-[#dfe5dc] pt-6 text-sm text-[#647168]">
-            <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 text-[#557b61]" />标签整理</span>
-            <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 text-[#557b61]" />标题与内容搜索</span>
-            <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 text-[#557b61]" />响应式布局</span>
+            <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 text-[#557b61]" />灵感随手记录</span>
+            <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 text-[#557b61]" />标签分类，搜索直达</span>
+            <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 text-[#557b61]" />电脑手机都适配</span>
           </div>
         </div>
 
